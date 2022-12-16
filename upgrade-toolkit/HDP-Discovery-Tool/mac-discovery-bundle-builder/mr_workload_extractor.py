@@ -137,9 +137,9 @@ class MapreduceExtractor:
                     hdfs_config['http_type'] = 'https'
                 try:
                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
+                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
                     hdfs_config['port'] = config_type['properties'][
-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
+                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
                 except:
                     log.debug("HA is not enabled on this cluster")
@@ -188,7 +188,7 @@ class MapreduceExtractor:
 
     def get_cluster_name(self):
         try:
-            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass))
+            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
         except requests.exceptions.RequestException as e:
             log.debug(
                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected.")
