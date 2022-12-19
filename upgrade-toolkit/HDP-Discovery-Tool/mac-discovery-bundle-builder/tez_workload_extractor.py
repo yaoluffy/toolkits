@@ -149,9 +149,9 @@ class TezHistoryExtractor:
                     hdfs_config['http_type'] = 'https'
                 try:
                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
+                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
                     hdfs_config['port'] = config_type['properties'][
-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
+                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
                 except:
                     log.debug("HA is not enabled on this cluster")
