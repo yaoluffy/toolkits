@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="67a4d1c7-09fc-4ad2-bbe1-3c329ee80bdb" name="Default Changelist" comment="Hive Code Scanner">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/patches/0001-construction-modified-for-https-parts-and-dfs.ha.nam.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/conf/config.ini" beforeDir="false" />
-    </list>
+    <list default="true" id="67a4d1c7-09fc-4ad2-bbe1-3c329ee80bdb" name="Default Changelist" comment=":construction: add a patch for multiple namespace." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +38,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1676248540543</updated>
-      <workItem from="1678416139050" duration="3398000" />
+      <workItem from="1678416139050" duration="3750000" />
     </task>
     <task id="LOCAL-00001" summary="Hive Code Scanner">
       <created>1676250124116</created>
@@ -58,7 +54,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676250304555</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary=":construction: add a patch for multiple namespace.">
+      <created>1678427235757</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1678427235757</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,6 +103,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Hive Code Scanner" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hive Code Scanner" />
+    <MESSAGE value=":construction: add a patch for multiple namespace." />
+    <option name="LAST_COMMIT_MESSAGE" value=":construction: add a patch for multiple namespace." />
   </component>
 </project>

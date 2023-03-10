@@ -1,0 +1,127 @@
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ambari_api_extarctor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ambari_api_extarctor.py
+index 1ae300d..d70d65a 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ambari_api_extarctor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ambari_api_extarctor.py
+@@ -188,7 +188,7 @@ class AmbariApiExtractor:
+ 
+     def get_cluster_name(self):
+         try:
+-            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+ 
+         except requests.exceptions.RequestException as e:
+             log.debug(
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdfs_fs_image_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdfs_fs_image_extractor.py
+index 23a5cac..af66855 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdfs_fs_image_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdfs_fs_image_extractor.py
+@@ -126,7 +126,7 @@ class HdfsFsImageExtractor:
+         try:
+             r = requests.get(
+                 self.ambari_http_protocol + "://" + self.ambari_server_host + ":" + self.ambari_server_port + "/api/v1/clusters",
+-                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+ 
+         except requests.exceptions.RequestException as e:
+             log.debug(
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdp_metrics_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdp_metrics_extractor.py
+index 5a91165..d05f568 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdp_metrics_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/hdp_metrics_extractor.py
+@@ -183,7 +183,7 @@ class MetricsExtractor:
+ 
+     def get_cluster_name(self):
+         try:
+-            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.debug(
+                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected.")
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/mr_workload_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/mr_workload_extractor.py
+index c7a4f3b..f0ad353 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/mr_workload_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/mr_workload_extractor.py
+@@ -137,9 +137,9 @@ class MapreduceExtractor:
+                     hdfs_config['http_type'] = 'https'
+                 try:
+                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
+-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
++                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
+                     hdfs_config['port'] = config_type['properties'][
+-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
++                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
+                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
+                 except:
+                     log.debug("HA is not enabled on this cluster")
+@@ -188,7 +188,7 @@ class MapreduceExtractor:
+ 
+     def get_cluster_name(self):
+         try:
+-            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++            r = requests.get(self.ambari_http_protocol+"://"+self.ambari_server_host+":"+self.ambari_server_port+"/api/v1/clusters",auth = HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.debug(
+                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected.")
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ranger_policy_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ranger_policy_extractor.py
+index 0321bec..6166333 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ranger_policy_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/ranger_policy_extractor.py
+@@ -49,7 +49,7 @@ class RangerPolicyExtractor:
+         try:
+             r = requests.get(
+                 self.ranger_ui_protocol + "://" + self.ranger_ui_server_name + ":" + self.ranger_ui_port + "/service/public/v2/api/policy",
+-                auth=HTTPBasicAuth(self.ranger_admin_user, self.ranger_admin_pass))
++                auth=HTTPBasicAuth(self.ranger_admin_user, self.ranger_admin_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.error(
+                 "Issue connecting to Ranger Admin UI. Please check the configs provided. Also, the process is up and running and responding as expected.")
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
+index 0173f6e..920f62b 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
+@@ -139,9 +139,9 @@ class SparkHistoryExtractor:
+                     hdfs_config['http_type'] = 'https'
+                 try:
+                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
+-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
++                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
+                     hdfs_config['port'] = config_type['properties'][
+-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
++                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
+                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
+                 except:
+                     log.debug("HA is not enabled on this cluster")
+@@ -192,7 +192,7 @@ class SparkHistoryExtractor:
+         try:
+             r = requests.get(
+                 self.ambari_http_protocol + "://" + self.ambari_server_host + ":" + self.ambari_server_port + "/api/v1/clusters",
+-                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.debug(
+                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected")
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
+index 4a87848..6ccdb28 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
+@@ -149,9 +149,9 @@ class TezHistoryExtractor:
+                     hdfs_config['http_type'] = 'https'
+                 try:
+                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
+-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
++                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
+                     hdfs_config['port'] = config_type['properties'][
+-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
++                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
+                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
+                 except:
+                     log.debug("HA is not enabled on this cluster")
+@@ -202,7 +202,7 @@ class TezHistoryExtractor:
+         try:
+             r = requests.get(
+                 self.ambari_http_protocol + "://" + self.ambari_server_host + ":" + self.ambari_server_port + "/api/v1/clusters",
+-                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.debug(
+                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected")
