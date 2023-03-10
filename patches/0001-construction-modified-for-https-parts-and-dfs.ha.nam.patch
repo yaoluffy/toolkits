@@ -1,0 +1,55 @@
+From 55b14f5219ef12a7b9c2c4e141e2b3b66c5e0bb8 Mon Sep 17 00:00:00 2001
+From: yaoluffy <yaoluffy2008@gmail.com>
+Date: Mon, 19 Dec 2022 15:53:57 +0900
+Subject: [PATCH] :construction: modified for https(parts) and dfs.ha.namenodes
+ for spark and tez
+
+---
+ .../spark_workload_extractor.py                             | 6 +++---
+ .../mac-discovery-bundle-builder/tez_workload_extractor.py  | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
+index 0173f6e..920f62b 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/spark_workload_extractor.py
+@@ -139,9 +139,9 @@ class SparkHistoryExtractor:
+                     hdfs_config['http_type'] = 'https'
+                 try:
+                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
+-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
++                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
+                     hdfs_config['port'] = config_type['properties'][
+-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
++                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
+                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
+                 except:
+                     log.debug("HA is not enabled on this cluster")
+@@ -192,7 +192,7 @@ class SparkHistoryExtractor:
+         try:
+             r = requests.get(
+                 self.ambari_http_protocol + "://" + self.ambari_server_host + ":" + self.ambari_server_port + "/api/v1/clusters",
+-                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass))
++                auth=HTTPBasicAuth(self.ambari_user, self.ambari_pass),verify=False)
+         except requests.exceptions.RequestException as e:
+             log.debug(
+                 "Issue connecting to ambari server. Please check the process is up and running and responding as expected")
+diff --git a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
+index 7db9654..6ccdb28 100644
+--- a/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
++++ b/upgrade-toolkit/HDP-Discovery-Tool/mac-discovery-bundle-builder/tez_workload_extractor.py
+@@ -149,9 +149,9 @@ class TezHistoryExtractor:
+                     hdfs_config['http_type'] = 'https'
+                 try:
+                     hdfs_config['nameservices'] = config_type['properties']['dfs.nameservices']
+-                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.mycluster']
++                    hdfs_config['namenodes.mycluster'] = config_type['properties']['dfs.ha.namenodes.ns1'] + ',' + config_type['properties']['dfs.ha.namenodes.ns2']
+                     hdfs_config['port'] = config_type['properties'][
+-                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'] + '.' +
++                        'dfs.namenode.' + hdfs_config['http_type'] + '-address.' + hdfs_config['nameservices'].split(",")[0] + '.' +
+                         hdfs_config['namenodes.mycluster'].split(",")[0]].split(":")[-1]
+                 except:
+                     log.debug("HA is not enabled on this cluster")
+-- 
+2.37.1 (Apple Git-137.1)
+
