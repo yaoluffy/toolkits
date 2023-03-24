@@ -97,7 +97,7 @@ class SparkHistoryExtractor:
                 log.debug("Active namenode url:" + active_namenode_url)
                 spark_output_dir = os.path.join(self.output_dir, "workload", "SPARK")
                 create_directory(spark_output_dir)
-                self.collect_spark_logs_for_cluster(active_namenode_url, spark_output_dir)
+                # self.collect_spark_logs_for_cluster(active_namenode_url, spark_output_dir)
             else:
                 log.debug("Webhdfs is not enabled, Unable to collect the spark job history via webhdfs")
 
