@@ -149,7 +149,7 @@ class TezHistoryExtractor:
                     hdfs_config['http_type'] = 'http'
                 else:
                     hdfs_config['http_type'] = 'https'
-                hdfs_config['port'] = hdfs_config['port'] = config_type['properties']['dfs.namenode.' + hdfs_config['http_type'] + '-address' + '.' + hdfs_config['ns'] + '.' + hdfs_config['nn1']].split(":")[-1]
+                hdfs_config['port'] = config_type['properties']['dfs.namenode.' + hdfs_config['http_type'] + '-address' + '.' + hdfs_config['ns'] + '.' + hdfs_config['nn1']].split(":")[-1]
                 hdfs_config['web_hdfs_enabled'] = config_type['properties']['dfs.webhdfs.enabled']
         return hdfs_config
 
